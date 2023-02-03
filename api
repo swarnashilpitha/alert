@@ -1,0 +1,22 @@
+import requests
+
+def get_latest_commit_timestamp(owner, repo, token):
+    headers = {"Authorization": f"Token {token}"}
+    url = f"https://api.github.com/repos/{owner}/{repo}/commits"
+    response = requests.get(url, headers=headers)
+    if response.status_code != 200:
+        print("Error:", response.content)
+        return None
+    data = response.json()
+    if not data:
+        print("No data found.")
+        return None
+    commit = data[0]
+    return commit["commit"]["committer"]["date"]
+
+owner = "Maersk-Global"
+repo = "DataDog-Alert-Suppression"
+token = "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"
+commit_timestamp = get_latest_commit_timestamp(owner, repo, token)
+if commit_timestamp:
+    print("Latest commit timestamp:", commit_timestamp)
